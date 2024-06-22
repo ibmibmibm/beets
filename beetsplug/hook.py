@@ -39,7 +39,12 @@ class CodingFormatter(string.Formatter):
 
         This method decodes the converted value using the formatter's coding.
         """
-        converted = super().convert_field(value, conversion)
+        if conversion == 'e':
+            if isinstance(value, bytes):
+                value = value.decode(self._coding)
+            converted = shlex.quote(value)
+        else:
+            converted = super().convert_field(value, conversion)
 
         if isinstance(converted, bytes):
             return converted.decode(self._coding)
